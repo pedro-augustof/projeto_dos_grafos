@@ -4,13 +4,21 @@ import com.teoriadosgrafos.projeto1.DTO.FindConnectedDTO;
 import com.teoriadosgrafos.projeto1.DTO.GrafoDTO;
 import com.teoriadosgrafos.projeto1.DTO.BfsDTO;
 import com.teoriadosgrafos.projeto1.model.Grafo;
+import com.teoriadosgrafos.projeto1.repositories.GrafoRepository;
 import com.teoriadosgrafos.projeto1.utils.StringConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 public class GrafoService {
+    private Integer[][] adjacencyMatrix;
+    private boolean[] visited;
+    private StringBuilder path;
+
+    @Autowired
+    GrafoRepository grafoRepository;
 
 
     public String createGrafo(GrafoDTO grafoDTO) {
@@ -21,6 +29,8 @@ public class GrafoService {
         Grafo grafo = new Grafo();
 
         grafo.setVertices(grafoDTO.getVertices());
+
+        grafo.setVerticesValues(StringConverter.matrixToStringConverter(grafoDTO.getGrafo()));
 
         for (int i = 0; i < grafoDTO.getGrafo().length; i++) {
             for (int y = 0; y < grafoDTO.getGrafo()[i].length; y++) {
@@ -112,6 +122,9 @@ public class GrafoService {
 
         grafo.setRelatedComponents(StringConverter.convertListSetToString(findConnectedDTO.getComponents()));
         grafo.setRelated(findConnectedDTO.isConnected());
+        grafo.setId(1L);
+
+        grafoRepository.save(grafo);
 
         return grafo.toString();
     }
@@ -153,7 +166,7 @@ public class GrafoService {
         for (int i = 0; i < n; i++) {
             if (visited[i]) {
                 if (distances[i] == 0) {
-                    path.append(source);
+                    path.append(source + 1);
                 } else {
                     List<Integer> vertices = new ArrayList<>();
                     int current = i;
@@ -163,7 +176,7 @@ public class GrafoService {
                     }
                     Collections.reverse(vertices);
                     for (int j = 0; j < vertices.size(); j++) {
-                        path.append(vertices.get(j));
+                        path.append(vertices.get(j) + 1);
                         if (j != vertices.size() - 1) {
                             path.append(" -> ");
                         }
@@ -208,5 +221,76 @@ public class GrafoService {
         }
 
         return new FindConnectedDTO(componentes, bfs(grafo, 0).isConnected());
+    }
+
+    public String breadthSearch(int source) {
+        Optional<Grafo> graphOPT = grafoRepository.findById(1L);
+
+        if (!graphOPT.isPresent()) {
+            return "Grafo não cadastrado";
+        }
+
+        Grafo graph = graphOPT.get();
+
+        List<Integer> valuesList = new ArrayList<>();
+
+        Integer[][] graphValues = StringConverter.stringToMatrixConverter(graph.getVerticesValues());
+
+        for (int i = 0; i < graphValues.length; i++) {
+            for (int z = 0; z < graphValues[i].length; z++) {
+                if (!valuesList.contains(graphValues[i][z])) {
+                    valuesList.add(graphValues[i][z]);
+                }
+            }
+        }
+
+        Integer[] values = new Integer[valuesList.size()];
+        int counter = 0;
+
+        for (Integer i :
+                valuesList) {
+            values[counter] = i;
+            counter++;
+        }
+
+        counter = 99;
+
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] == source) {
+                counter = i;
+            }
+        }
+
+        if (counter == 99) {
+            return "Vertice não encontrado!";
+        }
+
+        return depthFirstSearch(StringConverter.stringToMatrixConverter(graph.getAdjacency()), counter, values);
+    }
+
+    public String depthFirstSearch(Integer[][] matrix, int startVertex, Integer[] values) {
+        adjacencyMatrix = matrix;
+        int numVertices = matrix.length;
+        visited = new boolean[numVertices];
+        path = new StringBuilder();
+
+        // Inicializa todos os vértices como não visitados
+        Arrays.fill(visited, false);
+
+        // Inicia a busca em profundidade a partir do vértice fornecido
+        dfs(startVertex, values);
+
+        return path.toString();
+    }
+
+    private void dfs(int vertex, Integer[] values) {
+        visited[vertex] = true;
+        path.append(values[vertex]).append(" ");
+
+        for (int i = 0; i < adjacencyMatrix.length; i++) {
+            if (adjacencyMatrix[vertex][i] == 1 && !visited[i] && i > vertex) {
+                dfs(i, values);
+            }
+        }
     }
 }

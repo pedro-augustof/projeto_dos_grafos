@@ -65,4 +65,20 @@ public class StringConverter {
 
         return matrix;
     }
+
+    public static int[] stringToArray(String input) {
+        // Remove os caracteres '{' e '}' e os espaços em branco extras
+        String cleanInput = input.replace("{", "").replace("}", "").trim();
+
+        // Divide a string em substrings separadas por vírgula e espaço
+        String[] strArray = cleanInput.split(", ");
+
+        int[] intArray = new int[strArray.length];
+
+        for (int i = 0; i < strArray.length; i++) {
+            intArray[i] = Integer.parseInt(strArray[i]); // Converte cada substring para um inteiro e armazena no array de inteiros
+        }
+
+        return intArray;
+    }
 }

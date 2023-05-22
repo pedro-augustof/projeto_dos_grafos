@@ -1,9 +1,11 @@
 package com.teoriadosgrafos.projeto1.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.teoriadosgrafos.projeto1.utils.StringConverter;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,6 +19,8 @@ public class Grafo {
     private Long id;
 
     private Integer vertices;
+
+    private String verticesValues;
     private Integer edges;
     private Integer minimum;
     private Integer maximum;
@@ -32,7 +36,7 @@ public class Grafo {
                 "\nGrau máximo: " + maximum +
                 "\nRepresentação: \n" + adjacency +
                 "\nExiste componente conexo: " + isConnected() +
-                "\nComponentes conexos: '" + relatedComponents + '\'';
+                "\nComponentes conexos: '" + relate() + '\'';
     }
 
     private String isConnected() {
@@ -41,5 +45,44 @@ public class Grafo {
         }
 
         return "Não existe";
+    }
+
+    private String relate() {
+        List<Integer> valuesList = new ArrayList<>();
+
+        Integer[][] graphValues = StringConverter.stringToMatrixConverter(verticesValues);
+
+        for (int i = 0; i < graphValues.length; i++) {
+            for (int z = 0; z < graphValues[i].length; z++) {
+                if (!valuesList.contains(graphValues[i][z])) {
+                    valuesList.add(graphValues[i][z]);
+                }
+            }
+        }
+
+        Integer[] values = new Integer[valuesList.size()];
+        int counter = 0;
+
+        for (Integer i :
+                valuesList) {
+            values[counter] = i;
+            counter++;
+        }
+
+        StringBuilder string = new StringBuilder();
+
+        string.append("{");
+
+        int[] relatedArray = StringConverter.stringToArray(relatedComponents);
+
+        for (int i = 0; i < relatedArray.length; i++) {
+            string.append(values[relatedArray[i]]);
+            if (i != relatedArray.length - 1) {
+                string.append(", ");
+            }
+        }
+        string.append("}");
+
+        return string.toString();
     }
 }

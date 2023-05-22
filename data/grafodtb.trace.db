@@ -1,0 +1,3 @@
+2023-05-21 19:46:13 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "GRAFO" not found (this database is empty); SQL statement:
+select g1_0.id,g1_0.adjacency,g1_0.edges,g1_0.is_related,g1_0.maximum,g1_0.minimum,g1_0.related_components,g1_0.vertices from grafo g1_0 where g1_0.id=? [42104-214]

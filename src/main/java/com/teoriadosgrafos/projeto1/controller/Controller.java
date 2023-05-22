@@ -4,10 +4,7 @@ import com.teoriadosgrafos.projeto1.DTO.GrafoDTO;
 import com.teoriadosgrafos.projeto1.model.Grafo;
 import com.teoriadosgrafos.projeto1.service.GrafoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class Controller {
@@ -26,5 +23,11 @@ public class Controller {
         }
 
         return service.createGrafo(grafoDTO);
+    }
+
+    @GetMapping("/grafo/busca")
+    public String bfs(@RequestParam int source) {
+
+        return service.breadthSearch(source);
     }
 }
