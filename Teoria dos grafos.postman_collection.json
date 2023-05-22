@@ -1,0 +1,62 @@
+{
+	"info": {
+		"_postman_id": "db98e563-1a4a-4e76-8cb3-272f148e02ea",
+		"name": "Teoria dos grafos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18923040"
+	},
+	"item": [
+		{
+			"name": "Post do grafo",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vertices\": 4,\r\n    \"grafo\": [\r\n        [1, 2],\r\n        [2, 3],\r\n        [1, 4],\r\n        [2, 4]\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/grafo",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"grafo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Busca",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/grafo/busca?source=1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"grafo",
+						"busca"
+					],
+					"query": [
+						{
+							"key": "source",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
