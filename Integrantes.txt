@@ -2,5 +2,5 @@ Maycon de Almeida Leite RGM: 5826536412
 Pedro Augusto Ferreira da Silva RGM: 5825808991
 Hedhynann Gabryell Carmo Coelho RGM: 5826177293
 
-Intrução:
+Instrução:
 Como nosso projeto é uma API recomendamos que teste no Postman, para isso já deixamos pronto um json para facilitar a importação dos end-points.
